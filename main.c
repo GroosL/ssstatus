@@ -1,24 +1,18 @@
 #include "assets/cpu.h"
-#include "assets/customCommand.h"
+// #include "assets/customCommand.h"
 #include "assets/memory.h"
+#include "config.h"
 #include <stdio.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
 void startSignals();
 void signalHandler(int signal);
 
+int numCustomCommands = sizeof(customCommands) / sizeof(customCommands[0]);
+
 int main() {
   startSignals();
-
-  CustomCommand customCommands[] = {
-      {.command = "sb-volume", .interval = 500},
-      {.command = "sb-forecast", .interval = 3600},
-      {.command = "sb-phone-battery", .interval = 300},
-  };
-
-  int numCustomCommands = sizeof(customCommands) / sizeof(customCommands[0]);
 
   for (int i = 0; i < numCustomCommands; i++) {
     customCommands[i].lastUpdate = 0;
@@ -50,17 +44,15 @@ int main() {
     }
 
     for (int i = 0; i < numCustomCommands; i++) {
-      if (gotCustomCommandSignal ||
+      if (customCommands[i].state ||
           now - customCommands[i].lastUpdate >= customCommands[i].interval) {
         executeCustomCommand(customCommands[i].command,
                              customCommands[i].output,
                              sizeof(customCommands[i].output));
         customCommands[i].lastUpdate = now;
         flag = 1;
+        customCommands[i].state = 0;
       }
-    }
-    if (gotCustomCommandSignal) {
-      gotCustomCommandSignal = 0;
     }
 
     char dateTime[256];
@@ -71,17 +63,10 @@ int main() {
     }
 
     if (flag) {
-      // char customOutput[1024] = "";
-      // for (int i = 0; i < numCustomCommands; i++) {
-      //   if (strlen(customCommands[i].output) > 0) {
-      //     if (strlen(customOutput) > 0) {
-      //       strcat(customOutput, " | ");
-      //     }
-      //     strcat(customOutput, customCommands[i].output);
-      //   }
-      // }
       if (numCustomCommands > 0) {
-        printf("| %s | %s | %s | RAM: %.2lf%% | CPU: %.2lf%% | %s\n", customCommands[0].output, customCommands[1].output, customCommands[2].output, memPerc, cpuPerc, dateTime);
+        printf("| %s | %s | %s | RAM: %.2lf%% | CPU: %.2lf%% | %s\n",
+               customCommands[0].output, customCommands[1].output,
+               customCommands[2].output, memPerc, cpuPerc, dateTime);
       }
       fflush(stdout);
       flag = 0;
@@ -102,11 +87,14 @@ void startSignals() {
 }
 
 void signalHandler(int signal) {
+  for (int i = 0; i < numCustomCommands; i++) {
+    if (signal == customCommands[i].signal) {
+      customCommands[i].state = 1;
+    }
+  }
   if (signal == SIGUSR1) {
     gotCpuSignal = 1;
   } else if (signal == SIGUSR2) {
     gotMemorySignal = 1;
-  } else if (signal == SIGRTMIN) {
-    gotCustomCommandSignal = 1;
-  }
+  } 
 }
