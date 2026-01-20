@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include "cpu.h"
-#include "memory.h"
+#include "assets/cpu.h"
+#include "assets/memory.h"
 
 void startSignals();
 void signalHandler(int signal);
