@@ -2,4 +2,4 @@
 
 extern volatile sig_atomic_t gotMemorySignal;
 
-void memoryUsage();
+double memoryUsage();

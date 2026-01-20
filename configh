@@ -1,0 +1,11 @@
+customCommands[] = {
+  .command= jfisdajfdasf
+  fiojaooasdjf
+  fasdjouifjasdf
+}
+
+normalModule1
+normalModule2
+
+output:
+normalModule2, customCommands[1], customCommands[0], normalModule1
