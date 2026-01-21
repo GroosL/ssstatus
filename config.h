@@ -5,3 +5,5 @@ static CustomCommand customCommands[] = {
   {.command = "sb-forecast", .interval = 3600, .signal = 34},
   {.command = "sb-phone-battery", .interval = 300, .signal = 34},
 };
+
+// Add basic modules and add formatting configuration
