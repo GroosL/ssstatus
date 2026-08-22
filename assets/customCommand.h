@@ -1,12 +1,8 @@
-
 #ifndef ASSETS_CUSTOMCOMMAND_H
 #define ASSETS_CUSTOMCOMMAND_H
 
-#include <signal.h>
 #include <time.h>
 #include <stddef.h>
-
-extern volatile sig_atomic_t gotCustomCommandSignal;
 
 typedef struct {
     const char* command;
@@ -19,4 +15,4 @@ typedef struct {
 
 char* executeCustomCommand(const char* command, char* output, size_t maxLen);
 
-#endif /* ASSETS_CUSTOMCOMMAND_H */
+#endif

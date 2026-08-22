@@ -1,5 +1,6 @@
-#include <signal.h>
-
-extern volatile sig_atomic_t gotCpuSignal;
+#ifndef ASSETS_CPU_H
+#define ASSETS_CPU_H
 
 double cpuUsage();
+
+#endif

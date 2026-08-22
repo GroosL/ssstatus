@@ -1,17 +1,26 @@
 CC = cc
 CFLAGS = -Wall -O2
+
 TARGET = ssstatus
-SRC = main.c assets/cpu.c assets/memory.c assets/customCommand.c
+
+SRC = main.c $(wildcard assets/*.c)
+OBJ = $(SRC:.c=.o)
 
 all: $(TARGET)
 
-$(TARGET): $(SRC) assets/cpu.h assets/memory.h assets/customCommand.h
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+config.h: config.def.h
+	cp config.def.h config.h
+
+$(TARGET): config.h $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 debug: CFLAGS = -Wall -g -O0
-debug: $(TARGET)
+debug: clean $(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(OBJ)
 
-.PHONY: all clean debug
+.PHONY: all debug clean

@@ -1,8 +1,6 @@
+#include "memory.h"
 #include <stdio.h>
 #include <stdint.h>
-#include <signal.h>
-
-volatile sig_atomic_t gotMemorySignal = 0;
 
 typedef struct memory {
   uintmax_t total;
@@ -15,6 +13,7 @@ static void getMemStats() {
   FILE *f = fopen("/proc/meminfo", "r");
   if (!f) {
     perror("Could not open /proc/meminfo");
+    return;
   }
   char line[256];
   while (fgets(line, sizeof(line), f)) {
@@ -28,6 +27,7 @@ static void getMemStats() {
 
 double memoryUsage() {
   getMemStats();
-  gotMemorySignal = 0;
+  if (m.total == 0)
+    return 0;
   return (double)(((double)m.total - m.available) / m.total) * 100.0;
 }

@@ -1,3 +1,6 @@
 a.out
 ssstatus
 core
+*.o
+assets/*.o
+config.h

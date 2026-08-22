@@ -1,10 +1,7 @@
 #include "customCommand.h"
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-volatile sig_atomic_t gotCustomCommandSignal = 0;
 
 char *executeCustomCommand(const char *command, char *output, size_t maxLen) {
   memset(output, 0, maxLen);
